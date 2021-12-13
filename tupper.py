@@ -3,13 +3,13 @@ from decimal import Decimal, localcontext
 from math import floor
 from tkinter import Canvas, Tk, mainloop
 
-# Tupper's formula constant
+# Tupper's formula constants
 K = 960939379918958884971672962127852754715004339660129306651505519271702802395266424689642842174350718121267153782770623355993237280874144307891325963941337723487857735749823926629715517173716995165232890538221612403238855866184013235585136048828693337902491454229288667081096184496091705183454067827731551705405381627380967602565625016981482083418783163849115590225610003652351370343874461848378737238198224849863465033159410054974700593138339226497249461751545728366702369745461014655997933798537483143786841806593422227898388722980000748404719
 
 X_MAX = 106
 Y_MAX = 17
 
-# TKinter's window
+# TKinter's window dimensions
 MARGIN = 20
 PIXEL_SIZE = 12
 WINDOW_WIDTH = PIXEL_SIZE * X_MAX + 2 * MARGIN
@@ -20,7 +20,9 @@ PIXEL_CHAR = chr(11035)  # Unicode character of square
 SPACE_CHAR = " "
 
 
-# Tupper fomrula
+""" Tupper's fomrula """
+
+
 def tupper(x: int, y: int) -> bool:
     class Dec(Decimal):
         pass
@@ -36,6 +38,9 @@ def tupper(x: int, y: int) -> bool:
     )
 
 
+""" Creates matrix of screen with boolean values """
+
+
 def painter() -> list[list[bool]]:
     with localcontext() as context:
         context.prec = len(str(K))
@@ -45,6 +50,9 @@ def painter() -> list[list[bool]]:
         return matrix
 
 
+""" Creates graph from matrix """
+
+
 def draw_console(values: list[list[bool]]) -> None:
     print(
         "\n".join(
@@ -52,6 +60,9 @@ def draw_console(values: list[list[bool]]) -> None:
             for row in values
         )
     )
+
+
+""" Creates a TKinter window from graph """
 
 
 def show_window(values: list[list[bool]]) -> None:
@@ -74,6 +85,9 @@ def show_window(values: list[list[bool]]) -> None:
     mainloop()
 
 
+""" Main """
+
+
 def main(*, console: bool = True, window: bool = True) -> None:
     if not console and not window:
         console = True
@@ -87,6 +101,7 @@ def main(*, console: bool = True, window: bool = True) -> None:
 
 
 if __name__ == "__main__":
+    # Create flags
     parser = ArgumentParser()
     parser.add_argument(
         "--console", "-c", default=False, help="Draw in Console", action="store_true"
@@ -95,4 +110,6 @@ if __name__ == "__main__":
         "--window", "-w", default=False, help="Show Window", action="store_true"
     )
     args = parser.parse_args()
+
+    # Pass them to the function
     main(console=args.console, window=args.window)
