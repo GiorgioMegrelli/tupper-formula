@@ -5,7 +5,7 @@
 
 ### Check:
 ```python
-python .\tupper.py -h
+python tupper.py -h
 ```
 
 ```sh
@@ -26,13 +26,13 @@ optional arguments:
 <b>Run</b>
 
 ```sh
-python .\tupper.py -c
+python tupper.py -c
 ```
 
 <i>or</i>
 
 ```sh
-python .\tupper.py --console
+python tupper.py --console
 ```
 </br>
 
@@ -43,13 +43,13 @@ python .\tupper.py --console
 <b>Run</b>
 
 ```sh
-python .\tupper.py -w
+python tupper.py -w
 ```
 
 <i>or</i>
 
 ```sh
-python .\tupper.py --window
+python tupper.py --window
 ```
 </br>
 
