@@ -27,11 +27,7 @@ optional arguments:
 
 ```sh
 python tupper.py -c
-```
-
-<i>or</i>
-
-```sh
+# or
 python tupper.py --console
 ```
 </br>
@@ -44,11 +40,7 @@ python tupper.py --console
 
 ```sh
 python tupper.py -w
-```
-
-<i>or</i>
-
-```sh
+# or
 python tupper.py --window
 ```
 </br>
