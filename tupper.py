@@ -1,7 +1,19 @@
+import os
+import sys
 from argparse import ArgumentParser
-from decimal import Decimal, localcontext
+from decimal import Decimal as Dec
+from decimal import localcontext
 from math import floor
-from tkinter import Canvas, Tk, mainloop
+from operator import mod
+
+TKINTER_IMPORTED = False
+
+try:
+    from tkinter import Canvas, Tk, mainloop
+
+    TKINTER_IMPORTED = True
+except ModuleNotFoundError as e:
+    print(e, file=sys.stderr, end=2 * os.linesep)
 
 # Tupper's formula constants
 K = 960939379918958884971672962127852754715004339660129306651505519271702802395266424689642842174350718121267153782770623355993237280874144307891325963941337723487857735749823926629715517173716995165232890538221612403238855866184013235585136048828693337902491454229288667081096184496091705183454067827731551705405381627380967602565625016981482083418783163849115590225610003652351370343874461848378737238198224849863465033159410054974700593138339226497249461751545728366702369745461014655997933798537483143786841806593422227898388722980000748404719
@@ -16,7 +28,7 @@ WINDOW_WIDTH = PIXEL_SIZE * X_MAX + 2 * MARGIN
 WINDOW_HEIGHT = PIXEL_SIZE * Y_MAX + 2 * MARGIN
 
 # Console's "Pixel"
-PIXEL_CHAR = chr(11035)  # Unicode character of square
+PIXEL_CHAR = chr(9632)  # Unicode character of square
 SPACE_CHAR = " "
 
 
@@ -24,17 +36,11 @@ SPACE_CHAR = " "
 
 
 def tupper(x: int, y: int) -> bool:
-    class Dec(Decimal):
-        pass
-
-    x_decimal: Decimal = Dec(x)
-    y_decimal: Decimal = Dec(y)
     return 1 / 2 < floor(
-        (
-            floor(y_decimal / Dec(17))
-            * 2 ** (-17 * floor(x_decimal) - floor(y_decimal) % Dec(17))
+        mod(
+            floor(Dec(y) / Dec(17)) * 2 ** (-17 * floor(Dec(x)) - floor(Dec(y)) % Dec(17)),
+            2,
         )
-        % 2
     )
 
 
@@ -53,19 +59,14 @@ def painter() -> list[list[bool]]:
 """ Creates graph from matrix """
 
 
-def draw_console(values: list[list[bool]]) -> None:
-    print(
-        "\n".join(
-            "".join(PIXEL_CHAR if value else SPACE_CHAR for value in row)
-            for row in values
-        )
-    )
+def draw_console(values: list[list[bool]]):
+    print("\n".join("".join(PIXEL_CHAR if b else SPACE_CHAR for b in row) for row in values))
 
 
 """ Creates a TKinter window from graph """
 
 
-def show_window(values: list[list[bool]]) -> None:
+def show_window(values: list[list[bool]]):
     window = Tk()
     window.title("Tupper's formula")
     window.resizable(False, False)
@@ -88,7 +89,7 @@ def show_window(values: list[list[bool]]) -> None:
 """ Main """
 
 
-def main(*, console: bool = True, window: bool = True) -> None:
+def main(*, console: bool = True, window: bool = True):
     if not console and not window:
         console = True
 
@@ -103,13 +104,9 @@ def main(*, console: bool = True, window: bool = True) -> None:
 if __name__ == "__main__":
     # Create flags
     parser = ArgumentParser()
-    parser.add_argument(
-        "--console", "-c", default=False, help="Draw in Console", action="store_true"
-    )
-    parser.add_argument(
-        "--window", "-w", default=False, help="Show Window", action="store_true"
-    )
+    parser.add_argument("--console", "-c", default=False, help="Draw in Console", action="store_true")
+    parser.add_argument("--window", "-w", default=False, help="Show Window", action="store_true")
     args = parser.parse_args()
 
     # Pass them to the function
-    main(console=args.console, window=args.window)
+    main(console=args.console, window=TKINTER_IMPORTED and args.window)
